@@ -1,11 +1,17 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.27130.2020
+VisualStudioVersion = 15.0.27130.2010
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReactiveTracker.Fody", "ReactiveTracker.Fody\ReactiveTracker.Fody.csproj", "{F30C98FA-38FA-4B04-B6DA-3D1FC9B62DAB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReactiveTracker.Fody", "ReactiveTracker.Fody\ReactiveTracker.Fody.csproj", "{F30C98FA-38FA-4B04-B6DA-3D1FC9B62DAB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReactiveTracker", "ReactiveTracker\ReactiveTracker.csproj", "{E548ECF7-CFD3-4D44-A8D6-7617970AFE8D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReactiveTracker", "ReactiveTracker\ReactiveTracker.csproj", "{E548ECF7-CFD3-4D44-A8D6-7617970AFE8D}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{5DC6604D-AC87-47B8-8375-8578D156B118}"
+	ProjectSection(SolutionItems) = preProject
+		..\..\NuGet\package.cmd = ..\..\NuGet\package.cmd
+		..\..\NuGet\ReactiveTracker.Fody.nuspec = ..\..\NuGet\ReactiveTracker.Fody.nuspec
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

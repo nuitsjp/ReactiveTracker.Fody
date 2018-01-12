@@ -33,6 +33,7 @@ namespace ReactiveTracker
                         y.GetGenericTypeDefinition() == typeof(IReactiveProperty<>))))
             {
                 var property = propertyInfo.GetValue(target);
+                if (property == null) continue;
 
                 var typeArguments = propertyInfo.PropertyType.GetTypeInfo().GenericTypeArguments;
 
