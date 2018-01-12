@@ -9,6 +9,8 @@ namespace SampleConsole
         {
             var viewModel = new MainPageViewModel();
             viewModel.IntProperty.Value = 2;
+            viewModel.ExecuteCommand.Execute();
+            viewModel.AsyncReactiveCommand.Execute();
             Console.ReadLine();
         }
     }

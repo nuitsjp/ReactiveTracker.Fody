@@ -11,9 +11,12 @@ namespace SampleConsole
 
         public ReactiveCommand ExecuteCommand { get; }
 
+        public AsyncReactiveCommand AsyncReactiveCommand { get; }
+
         public MainPageViewModel()
         {
             ExecuteCommand = IntProperty.Select(x => x != 0).ToReactiveCommand();
+            AsyncReactiveCommand = IntProperty.Select(x => x != 0).ToAsyncReactiveCommand();
         }
     }
 }

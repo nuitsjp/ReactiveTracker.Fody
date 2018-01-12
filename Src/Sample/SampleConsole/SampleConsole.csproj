@@ -7,7 +7,7 @@
 
   <ItemGroup>
     <PackageReference Include="ReactiveProperty" Version="4.0.0" />
-    <PackageReference Include="ReactiveTracker.Fody" Version="0.0.2" />
+    <PackageReference Include="ReactiveTracker.Fody" Version="0.0.7" />
   </ItemGroup>
 
 </Project>

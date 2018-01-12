@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.Reflection;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
 using Mono.Cecil.Rocks;
@@ -12,7 +13,7 @@ public class ModuleWeaver
     public void Execute()
     {
         var initMethod =
-            ModuleDefinition.ImportReference(typeof(TrackEventInitializer).GetMethods().Single(x => x.Name == "Init"));
+            ModuleDefinition.ImportReference(typeof(TrackEventInitializer).GetRuntimeMethods().Single(x => x.Name == "Init"));
         foreach (var typeDefinition in
             ModuleDefinition.Types.Where(
                 x => x.CustomAttributes.Any(

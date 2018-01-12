@@ -3,6 +3,7 @@ using System.Linq;
 using System.Reactive.Linq;
 using System.Reflection;
 using System.Threading;
+using System.Threading.Tasks;
 using Reactive.Bindings;
 
 namespace ReactiveTracker
@@ -26,49 +27,74 @@ namespace ReactiveTracker
             var trackEventAttribute = target.GetType().GetTypeInfo().GetCustomAttribute<TrackEventAttribute>();
             var tracker = (IEventTracker)Activator.CreateInstance(trackEventAttribute.EventTrackerType);
 
-            foreach (var propertyInfo in 
-                target.GetType().GetRuntimeProperties()
-                    .Where(x => x.PropertyType.GetTypeInfo().ImplementedInterfaces.Any(y =>
-                        y.GetTypeInfo().IsGenericType &&
-                        y.GetGenericTypeDefinition() == typeof(IReactiveProperty<>))))
+            foreach (var propertyInfo in target.GetType().GetRuntimeProperties())
             {
-                var property = propertyInfo.GetValue(target);
-                if (property == null) continue;
+                var typeArguments = propertyInfo.GetReavtivePropertyTypeArguments();
+                if (typeArguments != null)
+                {
+                    var property = propertyInfo.GetValue(target);
+                    if (property == null) continue;
 
-                var typeArguments = propertyInfo.PropertyType.GetTypeInfo().GenericTypeArguments;
+                    var subscribe =
+                        SubscribeReactivePropertyMethodInfo.MakeGenericMethod(typeArguments);
+                    subscribe.Invoke(target, new[] { property, tracker, target.GetType(), propertyInfo });
+                    continue;
+                }
 
-                var skipGeneric = SkipMethodInfo.MakeGenericMethod(typeArguments);
-                var observable = skipGeneric.Invoke(null, new[] { property, 1 });
+                typeArguments = propertyInfo.GetReactiveCommandTypeArguments();
+                if (typeArguments != null)
+                {
+                    var property = propertyInfo.GetValue(target);
+                    if (property == null) continue;
 
-                var performerGeneric = typeof(Performer<>).MakeGenericType(typeArguments);
-                var performer = Activator.CreateInstance(performerGeneric, tracker, target.GetType(), propertyInfo);
-                var trackEvent = performerGeneric.GetTypeInfo().GetDeclaredMethod("TrackEvent");
-                var actionGeneric = typeof(Action<>).MakeGenericType(typeArguments);
-                var trackEventDelegate = Delegate.CreateDelegate(actionGeneric, performer, trackEvent);
+                    var subscribe =
+                        SubscribeReactiveCommandMethodInfo.MakeGenericMethod(typeArguments);
+                    subscribe.Invoke(target, new[] { property, tracker, target.GetType(), propertyInfo });
+                    continue;
+                }
 
+                typeArguments = propertyInfo.GetAsyncReactiveCommandTypeArguments();
+                if (typeArguments != null)
+                {
+                    var property = propertyInfo.GetValue(target);
+                    if (property == null) continue;
 
-                var subscribeGeneric = SubscribeMethodInfo.MakeGenericMethod(typeArguments);
-                subscribeGeneric.Invoke(null, new[] { observable, trackEventDelegate });
+                    var subscribe =
+                        SubscribeAsyncReactiveCommandMethodInfo.MakeGenericMethod(typeArguments);
+                    subscribe.Invoke(target, new[] { property, tracker, target.GetType(), propertyInfo });
+                }
             }
         }
 
-        private class Performer<T>
+        private static readonly MethodInfo SubscribeReactivePropertyMethodInfo =
+            typeof(TrackEventInitializer).GetRuntimeMethods().Single(x => x.Name == "SubscribeReactiveProperty" && x.IsGenericMethod);
+
+        private static void SubscribeReactiveProperty<T>(object property, IEventTracker eventTracker, Type type, PropertyInfo propertyInfo)
         {
-            private readonly IEventTracker _eventTracker;
-            private readonly Type _type;
-            private readonly PropertyInfo _propertyInfo;
+            var reactiveProperty = (ReactiveProperty<T>) property;
+            reactiveProperty.Skip(1).Subscribe(x => { eventTracker.TrackProperty(type, propertyInfo, x); });
+        }
 
-            public Performer(IEventTracker eventTracker, Type type, PropertyInfo propertyInfo)
-            {
-                _eventTracker = eventTracker;
-                _type = type;
-                _propertyInfo = propertyInfo;
-            }
+        private static readonly MethodInfo SubscribeReactiveCommandMethodInfo =
+            typeof(TrackEventInitializer).GetRuntimeMethods().Single(x => x.Name == "SubscribeReactiveCommand");
 
-            public void TrackEvent(T value)
+        private static void SubscribeReactiveCommand<T>(object property, IEventTracker eventTracker, Type type, PropertyInfo propertyInfo)
+        {
+            var reactiveProperty = (ReactiveCommand<T>)property;
+            reactiveProperty.Subscribe(x => { eventTracker.TrackCommand(type, propertyInfo, x); });
+        }
+
+        private static readonly MethodInfo SubscribeAsyncReactiveCommandMethodInfo =
+            typeof(TrackEventInitializer).GetRuntimeMethods().Single(x => x.Name == "SubscribeAsyncReactiveCommand");
+
+        private static void SubscribeAsyncReactiveCommand<T>(object property, IEventTracker eventTracker, Type type, PropertyInfo propertyInfo)
+        {
+            var reactiveProperty = (AsyncReactiveCommand<T>)property;
+            reactiveProperty.Subscribe(x =>
             {
-                _eventTracker.TrackEvent(_type, _propertyInfo, value);
-            }
+                eventTracker.TrackCommand(type, propertyInfo, x); 
+                return Task.CompletedTask;
+            });
         }
     }
 
