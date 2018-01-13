@@ -11,6 +11,9 @@ namespace SampleConsole
             viewModel.IntProperty.Value = 2;
             viewModel.ExecuteCommand.Execute();
             viewModel.AsyncReactiveCommand.Execute();
+
+            var property = new ReactiveProperty<string>();
+
             Console.ReadLine();
         }
     }

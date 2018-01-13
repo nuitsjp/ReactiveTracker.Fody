@@ -1,24 +1,30 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Text;
 using Reactive.Bindings;
 
 namespace ReactiveTracker
 {
-    internal static class PropertyInfoExtensions
+    internal static class ObjectExtensions
     {
-        internal static Type[] GetReavtivePropertyTypeArguments(this PropertyInfo propertyInfo)
+        internal static Type[] GetReavtivePropertyTypeArguments(this object property)
         {
+            if (property == null) throw new ArgumentNullException(nameof(property));
+
             var reactivePropertyType =
-                propertyInfo.PropertyType.GetInterfaces().FirstOrDefault(
+                property.GetType().GetInterfaces().FirstOrDefault(
                     x => x.IsGenericType
                          && x.GetGenericTypeDefinition() == typeof(IReactiveProperty<>));
             return reactivePropertyType != null ? reactivePropertyType.GetGenericArguments() : null;
         }
 
-        internal static Type[] GetReactiveCommandTypeArguments(this PropertyInfo propertyInfo)
+        internal static Type[] GetReactiveCommandTypeArguments(this object property)
         {
-            for (var propertyType = propertyInfo.PropertyType; propertyType != typeof(object); propertyType = propertyType.BaseType)
+            if (property == null) throw new ArgumentNullException(nameof(property));
+
+            for (var propertyType = property.GetType(); propertyType != typeof(object); propertyType = propertyType.BaseType)
             {
                 if (propertyType.IsGenericType && propertyType.GetGenericTypeDefinition() == typeof(ReactiveCommand<>))
                 {
@@ -28,9 +34,11 @@ namespace ReactiveTracker
             return null;
         }
 
-        internal static Type[] GetAsyncReactiveCommandTypeArguments(this PropertyInfo propertyInfo)
+        internal static Type[] GetAsyncReactiveCommandTypeArguments(this object property)
         {
-            for (var propertyType = propertyInfo.PropertyType; propertyType != typeof(object); propertyType = propertyType.BaseType)
+            if (property == null) throw new ArgumentNullException(nameof(property));
+
+            for (var propertyType = property.GetType(); propertyType != null && propertyType != typeof(object); propertyType = propertyType.BaseType)
             {
                 if (propertyType.IsGenericType && propertyType.GetGenericTypeDefinition() == typeof(AsyncReactiveCommand<>))
                 {

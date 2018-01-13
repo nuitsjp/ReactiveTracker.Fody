@@ -10,18 +10,6 @@ namespace ReactiveTracker
 {
     public static class TrackEventInitializer
     {
-        private static readonly MethodInfo SkipMethodInfo =
-            typeof(Observable).GetTypeInfo().GetDeclaredMethods("Skip")
-                .Single(
-                    x => x.GetParameters().Length == 2
-                        && x.GetParameters()[1].ParameterType == typeof(int));
-
-        private static readonly MethodInfo SubscribeMethodInfo =
-            typeof(ObservableExtensions).GetTypeInfo().GetDeclaredMethods("Subscribe")
-                .Single(
-                    x => x.GetParameters().Length == 2 
-                        && x.GetParameters()[1].ParameterType != typeof(CancellationToken));
-
         public static void Init(object target)
         {
             var trackEventAttribute = target.GetType().GetTypeInfo().GetCustomAttribute<TrackEventAttribute>();
@@ -29,38 +17,29 @@ namespace ReactiveTracker
 
             foreach (var propertyInfo in target.GetType().GetRuntimeProperties())
             {
-                var typeArguments = propertyInfo.GetReavtivePropertyTypeArguments();
+                var property = propertyInfo.GetValue(target);
+                if (property == null) continue;
+
+                var typeArguments = property.GetReavtivePropertyTypeArguments();
                 if (typeArguments != null)
                 {
-                    var property = propertyInfo.GetValue(target);
-                    if (property == null) continue;
-
-                    var subscribe =
-                        SubscribeReactivePropertyMethodInfo.MakeGenericMethod(typeArguments);
+                    var subscribe = SubscribeReactivePropertyMethodInfo.MakeGenericMethod(typeArguments);
                     subscribe.Invoke(target, new[] { property, tracker, target.GetType(), propertyInfo });
                     continue;
                 }
 
-                typeArguments = propertyInfo.GetReactiveCommandTypeArguments();
+                typeArguments = property.GetReactiveCommandTypeArguments();
                 if (typeArguments != null)
                 {
-                    var property = propertyInfo.GetValue(target);
-                    if (property == null) continue;
-
-                    var subscribe =
-                        SubscribeReactiveCommandMethodInfo.MakeGenericMethod(typeArguments);
+                    var subscribe = SubscribeReactiveCommandMethodInfo.MakeGenericMethod(typeArguments);
                     subscribe.Invoke(target, new[] { property, tracker, target.GetType(), propertyInfo });
                     continue;
                 }
 
-                typeArguments = propertyInfo.GetAsyncReactiveCommandTypeArguments();
+                typeArguments = property.GetAsyncReactiveCommandTypeArguments();
                 if (typeArguments != null)
                 {
-                    var property = propertyInfo.GetValue(target);
-                    if (property == null) continue;
-
-                    var subscribe =
-                        SubscribeAsyncReactiveCommandMethodInfo.MakeGenericMethod(typeArguments);
+                    var subscribe = SubscribeAsyncReactiveCommandMethodInfo.MakeGenericMethod(typeArguments);
                     subscribe.Invoke(target, new[] { property, tracker, target.GetType(), propertyInfo });
                 }
             }
