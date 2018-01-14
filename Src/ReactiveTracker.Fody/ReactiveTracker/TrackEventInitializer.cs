@@ -17,6 +17,8 @@ namespace ReactiveTracker
 
             foreach (var propertyInfo in target.GetType().GetRuntimeProperties())
             {
+                if(propertyInfo.GetCustomAttribute<IgnoreTrackEventAttribute>() != null) continue;
+
                 var property = propertyInfo.GetValue(target);
                 if (property == null) continue;
 

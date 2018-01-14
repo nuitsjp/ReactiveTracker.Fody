@@ -35,6 +35,8 @@ namespace ReactiveTracker.Tests
             Assert.Equal("AsyncReactiveCommand", EventTracker.CommandEvents[1].PropertyInfo.Name);
             Assert.Null(EventTracker.CommandEvents[1].Value);
 
+            mock.IgnoreProperty.Value = true;
+            Assert.Single(EventTracker.PropertyEvents);
         }
 
         public class EventTracker : IEventTracker
@@ -64,6 +66,9 @@ namespace ReactiveTracker.Tests
         {
             public bool BoolProperty { get; set; }
             public ReactiveProperty<int> IntProperty { get; } = new ReactiveProperty<int>();
+
+            [IgnoreTrackEvent]
+            public ReactiveProperty<bool> IgnoreProperty { get; } = new ReactiveProperty<bool>();
 
             public ReactiveCommand ReactiveCommand { get; }
 
