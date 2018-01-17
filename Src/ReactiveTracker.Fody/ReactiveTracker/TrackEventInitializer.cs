@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Reactive.Linq;
 using System.Reflection;
-using System.Threading;
 using System.Threading.Tasks;
 using Reactive.Bindings;
 
@@ -22,7 +21,7 @@ namespace ReactiveTracker
                 var property = propertyInfo.GetValue(target);
                 if (property == null) continue;
 
-                var typeArguments = property.GetReavtivePropertyTypeArguments();
+                var typeArguments = property.GetReactivePropertyTypeArguments();
                 if (typeArguments != null)
                 {
                     var subscribe = SubscribeReactivePropertyMethodInfo.MakeGenericMethod(typeArguments);

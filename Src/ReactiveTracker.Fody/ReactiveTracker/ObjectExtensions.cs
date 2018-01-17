@@ -1,15 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
-using System.Text;
 using Reactive.Bindings;
 
 namespace ReactiveTracker
 {
     internal static class ObjectExtensions
     {
-        internal static Type[] GetReavtivePropertyTypeArguments(this object property)
+        internal static Type[] GetReactivePropertyTypeArguments(this object property)
         {
             if (property == null) throw new ArgumentNullException(nameof(property));
 

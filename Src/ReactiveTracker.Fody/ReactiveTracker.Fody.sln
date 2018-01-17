@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.27130.2010
+VisualStudioVersion = 15.0.27130.2020
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReactiveTracker.Fody", "ReactiveTracker.Fody\ReactiveTracker.Fody.csproj", "{F30C98FA-38FA-4B04-B6DA-3D1FC9B62DAB}"
 EndProject
@@ -9,8 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReactiveTracker", "Reactive
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{5DC6604D-AC87-47B8-8375-8578D156B118}"
 	ProjectSection(SolutionItems) = preProject
-		..\..\NuGet\package.cmd = ..\..\NuGet\package.cmd
-		..\..\NuGet\ReactiveTracker.Fody.nuspec = ..\..\NuGet\ReactiveTracker.Fody.nuspec
+		..\Directory.Build.props = ..\Directory.Build.props
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReactiveTracker.Tests", "ReactiveTracker.Tests\ReactiveTracker.Tests.csproj", "{E71D7530-FC62-4C61-9C88-9D57155A72F3}"
