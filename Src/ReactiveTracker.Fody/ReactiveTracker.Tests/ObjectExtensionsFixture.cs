@@ -20,13 +20,13 @@ namespace ReactiveTracker.Tests
         }
 
         [Fact]
-        public void GetReavtivePropertyTypeArgumentsWhenInterface()
+        public void GetReactivePropertyTypeArgumentsWhenInterface()
         {
             var mock = new ReactivePropertyFixtureMock();
 
             var interfacePropertyInfo = typeof(ReactivePropertyFixtureMock).GetProperty("InterfaceProperty");
             var interfaceProperty = interfacePropertyInfo.GetValue(mock);
-            var interfaceTypeArguments = interfaceProperty.GetReavtivePropertyTypeArguments();
+            var interfaceTypeArguments = interfaceProperty.GetReactivePropertyTypeArguments();
 
             Assert.NotNull(interfaceTypeArguments);
             Assert.Single(interfaceTypeArguments);
@@ -34,13 +34,13 @@ namespace ReactiveTracker.Tests
         }
 
         [Fact]
-        public void GetReavtivePropertyTypeArgumentsWhenClass()
+        public void GetReactivePropertyTypeArgumentsWhenClass()
         {
             var mock = new ReactivePropertyFixtureMock();
 
             var classPropertyInfo = typeof(ReactivePropertyFixtureMock).GetProperty("ClassProperty");
             var classeProperty = classPropertyInfo.GetValue(mock);
-            var classTypeArguments = classeProperty.GetReavtivePropertyTypeArguments();
+            var classTypeArguments = classeProperty.GetReactivePropertyTypeArguments();
 
             Assert.NotNull(classTypeArguments);
             Assert.Single(classTypeArguments);
@@ -48,13 +48,13 @@ namespace ReactiveTracker.Tests
         }
 
         [Fact]
-        public void GetReavtivePropertyTypeArgumentsWhenNull()
+        public void GetReactivePropertyTypeArgumentsWhenNull()
         {
             var mock = new ReactivePropertyFixtureMock();
 
             var nullPropertyInfo = typeof(ReactivePropertyFixtureMock).GetProperty("NullProperty");
             var nullProperty = nullPropertyInfo.GetValue(mock);
-            Assert.Throws<ArgumentNullException>(() => nullProperty.GetReavtivePropertyTypeArguments());
+            Assert.Throws<ArgumentNullException>(() => nullProperty.GetReactivePropertyTypeArguments());
         }
 
         public class ReactiveCommandFixtureMock

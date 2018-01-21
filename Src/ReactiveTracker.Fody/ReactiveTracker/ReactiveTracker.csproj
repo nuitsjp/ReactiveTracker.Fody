@@ -1,11 +1,20 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFrameworks>netstandard2.0</TargetFrameworks>
+    <Authors>Atsushi Nakamura</Authors>
+    <Description>AOP library that subscribes to ReactiveProperty and tracks events.</Description>
+    <PackageProjectUrl>https://github.com/nuitsjp/ReactiveTracker.Fody</PackageProjectUrl>
+    <PackageLicenseUrl>https://github.com/nuitsjp/ReactiveTracker.Fody/blob/master/LICENSE</PackageLicenseUrl>
+    <PackageReleaseNotes>https://github.com/nuitsjp/ReactiveTracker.Fody/releases</PackageReleaseNotes>
+    <PackageTags>reactiveproperty app center appcenter analytics fody aop event track</PackageTags>
+    <PackageOutputPath>$(SolutionDir)../Package</PackageOutputPath>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="ReactiveProperty" Version="4.0.0" />
+    <PackageReference Include="Fody" Version="2.3.21" PrivateAssets="None" />
+    <PackageReference Include="FodyPackaging" Version="2.3.21" PrivateAssets="All" />
   </ItemGroup>
 
 </Project>

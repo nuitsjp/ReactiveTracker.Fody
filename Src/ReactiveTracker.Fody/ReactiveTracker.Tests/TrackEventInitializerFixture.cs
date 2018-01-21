@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Reactive.Linq;
 using System.Reflection;
-using System.Runtime.Remoting;
-using System.Windows.Documents;
 using Reactive.Bindings;
 using Xunit;
 

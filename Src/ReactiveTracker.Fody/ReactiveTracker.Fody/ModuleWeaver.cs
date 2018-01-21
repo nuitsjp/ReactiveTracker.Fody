@@ -1,26 +1,33 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
+using Fody;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
 using Mono.Cecil.Rocks;
-using ReactiveTracker;
 
 // ReSharper disable once CheckNamespace
-public class ModuleWeaver
+public class ModuleWeaver: BaseModuleWeaver
 {
-    public ModuleDefinition ModuleDefinition { get; set; }
 
-    public void Execute()
+    public override void Execute()
     {
-        var initMethod =
-            ModuleDefinition.ImportReference(typeof(TrackEventInitializer).GetRuntimeMethods().Single(x => x.Name == "Init"));
+        var methodDefinition = FindType("ReactiveTracker.TrackEventInitializer")
+            .Methods
+            .Single(x=>x.Name=="Init");
+        var initMethod = ModuleDefinition.ImportReference(methodDefinition);
         foreach (var typeDefinition in
             ModuleDefinition.Types.Where(
                 x => x.CustomAttributes.Any(
-                    attribute => attribute.AttributeType.FullName == typeof(TrackEventAttribute).FullName)))
+                    attribute => attribute.AttributeType.FullName == "ReactiveTracker.TrackEventAttribute")))
         {
             WeaveTracker(typeDefinition, initMethod);
         }
+    }
+
+    public override IEnumerable<string> GetAssembliesForScanning()
+    {
+        yield return "ReactiveTracker";
     }
 
     private static void WeaveTracker(TypeDefinition typeDefinition, MethodReference initMethodReference)
